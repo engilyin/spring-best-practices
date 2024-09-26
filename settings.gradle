@@ -1,0 +1,11 @@
+rootProject.name = 'bestpractices'
+
+
+include ':sample-frontend'
+include ':rest-backend'
+include ':kafka'
+
+
+project(':sample-frontend').projectDir = "$rootDir/sample-frontend" as File
+project(':rest-backend').projectDir = "$rootDir/rest-backend" as File
+project(':kafka').projectDir = "$rootDir/kafka" as File

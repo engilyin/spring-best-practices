@@ -1,0 +1,59 @@
+plugins {
+	id 'base'
+	id 'org.springframework.boot' version '3.3.1' apply false
+	id 'io.spring.dependency-management' version '1.1.5' apply false
+}
+
+subprojects {
+  group = 'com.engilyin'
+  version = project.getProperty("version")=='unspecified'? "${baseVersion}-SNAPSHOT" : project.getProperty("version")
+  
+  repositories {
+    mavenCentral()
+  }
+  
+  afterEvaluate { subproject ->
+  
+    // Apply configurations to only Java (Spring Boot and non-Spring Boot) subprojects
+    if (subproject.plugins.hasPlugin('java')) {
+      apply plugin: 'java'
+            
+      java {
+        toolchain {
+          languageVersion = JavaLanguageVersion.of("${targetCompatibility}")
+        }
+      }
+
+      configurations {
+        compileOnly {
+          extendsFrom annotationProcessor
+        }
+	  }
+      
+      dependencyManagement {
+        imports {
+          mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+      }
+
+      dependencies {
+                
+      }
+    }
+
+        // Apply configurations to only Spring Boot subprojects
+    if (subproject.plugins.hasPlugin('org.springframework.boot')) {
+
+      dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+      }
+
+      bootJar {
+        enabled = true
+      }
+
+      jar {
+        enabled = false
+      }
+    }
+  }
+}
