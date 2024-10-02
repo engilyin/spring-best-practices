@@ -1,6 +1,37 @@
-apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'	
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVersion}" apply false
+	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+	id 'project-report'
+}
+
+repositories {
+  mavenCentral()
+}
+  
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of("${targetCompatibility}")
+  }
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+dependencyManagement {
+  imports {
+    mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+
+jar {
+  enabled = false
+}	
 
 dependencies {
 	compileOnly 'org.projectlombok:lombok'
@@ -12,14 +43,10 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	
 
-	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	//developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'com.h2database:h2'
 
 	
-}
-
-bootJar {
-    mainClass = 'com.engilyin.bestpractices.kafka.KafkaBestPracticesApplication' 
 }
 
 testing {
