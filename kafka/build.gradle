@@ -1,44 +1,68 @@
-apply plugin 'java'
+apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'	
 
 dependencies {
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 	implementation 'org.springframework.kafka:spring-kafka'
 	
-	compileOnly 'org.projectlombok:lombok'
+
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
+
 	
+}
+
+bootJar {
+    mainClass = 'com.engilyin.bestpractices.kafka.KafkaBestPracticesApplication' 
 }
 
 testing {
   suites {
   
     test {
-    	useJUnitPlatform()
+    	useJUnitJupiter()
     	dependencies {
+			
+		  compileOnly 'org.projectlombok:lombok'
+	      annotationProcessor 'org.projectlombok:lombok'	
+	      
           implementation 'org.mockito:mockito-junit-jupiter:5.12.0'
     	}
     }
     
     
     integrationTest(JvmTestSuite) {
+	  
+	  targets {
+		all {
+		  testTask.configure {
+			systemProperty('spring.profiles.active', 'test')
+		  }	
+	    } 
+	  }
+		
       dependencies {
         implementation project()
 
         implementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'org.springframework.kafka:spring-kafka-test'
       }
+      sources {
+		  java {
+			srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/src/main/java"]  
+		  }
+		  resources {
+			srcDirs = ['src/integrationTest/resources', 'src/main/resources']
+		  }
+	  }
     }
   }
 }
 
-tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
-}
 

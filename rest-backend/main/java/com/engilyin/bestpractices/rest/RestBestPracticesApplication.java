@@ -1,13 +1,13 @@
-package com.engilyin.bestpractices;
+package com.engilyin.bestpractices.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BestpracticesApplication {
+public class RestBestPracticesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BestpracticesApplication.class, args);
+		SpringApplication.run(RestBestPracticesApplication.class, args);
 	}
 
 }
