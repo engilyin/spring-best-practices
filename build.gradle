@@ -1,4 +1,38 @@
+//plugins {
+//	id 'com.diffplug.spotless' version "${spotlessVersion}"
+//}
+
 allprojects {
   group = 'com.engilyin'
   version = project.getProperty("version")=='unspecified'? "${baseVersion}-SNAPSHOT" : project.getProperty("version")	
 }
+
+
+//spotless {
+//	ratchedFrom 'origin/main'
+//	format 'misc', {
+//	  target '*.gradle', '*.md', '.gitignore'
+//	  trimTrailingWhitespace()
+//	  indentWithSpaces()
+//	  endWithNewLine()
+//	}
+//	java {
+//	  target 'src/*/java/**/*.java'
+//	  formatAnnotations()
+//	  toggleOffOn()
+//      palantirJavaFormat()
+//      removeUnusedImports()
+//      trimTrailingWhitespace()
+//      endWithNewline()
+//	}
+//}
+
+//task installGitHook(type: Copy) {
+//  print 'copying Git hook...'
+//  from new File(rootProject.rootDir, 'hooks/pre-commit')
+//  into { new File(rootProject.rootDir, '.git/hooks')}
+//  fileMode 0775
+//}
+
+//build.dependsOn installGitHook
+

@@ -1,8 +1,12 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version "${springBootVersion}" apply false
+	id 'org.springframework.boot' version "${springBootVersion}"
 	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 	id 'project-report'
+	id 'jacoco'
+	id 'jacoco-report-aggregation'
+	id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
+	id 'com.diffplug.spotless' version "${spotlessVersion}"
 }
 
 repositories {
@@ -32,6 +36,11 @@ jar {
   enabled = false
 }
 
+springBoot {
+  mainClass = 'com.engilyin.bestpractices.rest.RestBestPracticesApplication'
+  buildInfo()
+}
+
 dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -59,6 +68,7 @@ testing {
 	      annotationProcessor 'org.projectlombok:lombok'
 	      
           implementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+          implementation 'org.assertj:assertj-core:3.24.2'
     	}
     }
     
@@ -91,6 +101,35 @@ testing {
 	  }
     }
   }
+}
+
+jacocoTestReport {
+  sourceSets sourceSets.main
+  reports {
+    xml.required = true
+    html.required = true
+  }
+  
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+        'com/engilyin/bestpractices/rest/RestBestPracticesApplication.class',
+        '**/config/**'
+      ])
+    }))
+  }
+}
+
+task combineJacocoReports(type: JacocoReport, group: 'verification') {
+  executionData fileTree(project.buildDir.absolutePath).include("jacoco/*.exec")
+  classDirectories.setFrom files(project.sourceSets.main.output)
+  sourceDirectories.setFrom files(project.sourceSets.main.allSource.srcDirs)
+  reports {
+    xml.required = true
+    html.required = true
+  }
+  
+  dependsOn test, integrationTest, testCodeCoverageReport, integrationTestCodeCoverageReport
 }
 
 

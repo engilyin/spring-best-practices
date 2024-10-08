@@ -1,0 +1,18 @@
+spring:
+  ssl:
+    bundle:
+      jks:
+        my-kafka-ssl-bundle:
+          keystore:
+            type: jks
+            location: my-kafka.jks
+            password: ${KAFKA_KEYSTORE_PASSWORD}      
+          truststore:
+            type: jks
+            location: my-kafka.jks
+            password: ${KAFKA_KEYSTORE_PASSWORD}   
+
+kafka:
+  producer:
+    ssl:
+      bundle: my-kafka-ssl-bundle 

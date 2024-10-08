@@ -1,0 +1,40 @@
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    client-id: "${spring.application.name}-app"
+    security:
+      protocol: SSL
+    producer:
+      retries: 0
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      batch-size: 16384
+      
+      # May be defined as X * Y  * Z, where:
+      # X - avg incoming traffic per instance per second (here: 4Mb/s)
+      # Y - spike koeff, to get traffic for loaded instance out of average traffic (here: 2)
+      # Z - seconds to tolerate networking issues (here: 10)
+      buffer-memory: 83886080
+      properties:
+        #acks: all
+        #batch.size: 16384
+        #enable.idempotence: true
+        request.timeout.ms: 15000 # 15 sec
+        retries: 0
+        linger.ms: 20
+        retry.backoff.ms: 1000
+        max.block.ms: 5000 # kafka default 60000
+        delivery.timeout.ms: 30000 # request.timeout.ms + linger.ms
+      listener:
+        ack-mode: record
+        concurrency: 4
+        log-container-config: false
+        
+logging:
+  level:
+    root: INFO
+    
+app:
+  kafka:
+    topic:
+      my: my-topic	
