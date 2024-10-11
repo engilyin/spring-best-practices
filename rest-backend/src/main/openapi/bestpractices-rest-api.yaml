@@ -1,0 +1,306 @@
+openapi: 3.1.0
+x-stoplight:
+  id: 8y1uq35v10gpl
+info:
+  title: bestpractices-rest-api
+  version: '1.0'
+  summary: The sample REST API for Best Practices Sample project
+  description: We are using this API to demo Spring Boot Web app implementation
+  license:
+    name: Apache 2.0
+    url: 'https://github.com/engilyin/spring-best-practices?tab=Apache-2.0-1-ov-file#readme'
+  contact:
+    name: Alex ILIN
+    url: https://engilyin.com
+    email: engilyin@gmail.com
+  termsOfService: Sample
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags:
+        - users
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+      x-stoplight:
+        id: oummas1mrxdxo
+    patch:
+      summary: Update User Information
+      operationId: patch-users-userId
+      responses:
+        '200':
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Updated User Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: '1985-10-02'
+                    emailVerified: false
+                    createDate: '2019-08-24'
+        '404':
+          description: User Not Found
+        '409':
+          description: Email Already Taken
+      description: Update the information of an existing user.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatedUserData'
+      x-stoplight:
+        id: 4agx67bs2vc4f
+      tags:
+        - users
+  /user:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '200':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: '1996-08-24'
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+      x-stoplight:
+        id: kn3s8pe7vi1zy
+      tags:
+        - users
+  /articles:
+    get:
+      summary: List Articles
+      tags:
+        - articles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+                  x-stoplight:
+                    id: ynzdulcqjs7v1
+              examples: {}
+        4XX:
+          description: Client Error
+      operationId: get-articles
+      x-stoplight:
+        id: vcz4wll0mio9o
+      description: Lists articles
+    post:
+      summary: Create New Article
+      tags:
+        - articles
+      responses:
+        '200':
+          description: OK
+        4XX:
+          description: Client Error
+      operationId: post-articles
+      x-stoplight:
+        id: svp17fhtsr6b5
+      requestBody:
+        $ref: '#/components/requestBodies/NewArticle'
+      description: Creates a new article
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      examples:
+        - id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+          x-stoplight:
+            id: kib3k4kyjy5vf
+        firstName:
+          type: string
+          x-stoplight:
+            id: 242m1uew71fom
+        lastName:
+          type: string
+          x-stoplight:
+            id: v8abwa56wxauk
+        email:
+          type: string
+          format: email
+          x-stoplight:
+            id: cmoa0tmjdcd0l
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+          x-stoplight:
+            id: 9vvg3rjtri102
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+          x-stoplight:
+            id: tulc6clccno7t
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+          x-stoplight:
+            id: 58o2yivkmbwqf
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
+      x-stoplight:
+        id: dui3f0ukue62f
+    Article:
+      title: Article
+      x-stoplight:
+        id: 3vn1uayp74w7m
+      type: object
+      properties:
+        id:
+          type: string
+          x-stoplight:
+            id: 77m6mkxzvlxr6
+        title:
+          type: string
+          x-stoplight:
+            id: omo6aquxkzvpa
+        body:
+          type: string
+          x-stoplight:
+            id: b23lvnjm2yxpd
+        tags:
+          type: string
+          x-stoplight:
+            id: c30m1ujwz3a6b
+        created:
+          type: string
+          x-stoplight:
+            id: vorb75o8aydr0
+          format: date-time
+        edited:
+          type: string
+          x-stoplight:
+            id: 7ev7wd7wxp8g7
+        owner:
+          type: string
+          x-stoplight:
+            id: ssn3ck8rdnyuk
+      description: The article about anything
+  requestBodies:
+    NewArticle:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - article
+            properties:
+              article:
+                $ref: '#/components/schemas/Article'
+                x-stoplight:
+                  id: kzu3d2azdas3h
+    UpdatedUserData:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+                description: 'If a new email is given, the user''s email verified property will be set to false.'
+              dateOfBirth:
+                type: string
+tags:
+  - name: articles
+  - name: users

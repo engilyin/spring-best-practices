@@ -5,6 +5,7 @@ plugins {
 	id 'project-report'
 	id 'jacoco'
 	id 'jacoco-report-aggregation'
+	id 'org.openapi.generator' version '7.9.0'
 	id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
 	id 'com.diffplug.spotless' version "${spotlessVersion}"
 }
@@ -41,9 +42,33 @@ springBoot {
   buildInfo()
 }
 
+sourceSets {
+  main {
+    java {
+      srcDir "$buildDir/generated/openapi/src/main/java"
+    }
+    resources {
+      srcDirs = ['src/main/openapi', 'src/main/resources']
+    }
+  }
+  test {
+    java {  
+      srcDir "$buildDir/generated/openapi/src/main/java"
+    }
+  }
+}
+
+compileJava {
+  dependsOn tasks.openApiGenerate
+}
+
 dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor 'io.swagger.core.v3:swagger-annotations:2.2.23'
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -52,9 +77,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+    //For OpenAPI
+	implementation "org.openapitools:jackson-databind-nullable:0.2.6"
+	
 	
 	//developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'com.h2database:h2'
+	
 	
 }
 
@@ -89,7 +122,9 @@ testing {
         implementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
         implementation 'org.springframework.security:spring-security-test'
-        implementation 'io.rest-assured:rest-assured:5.4.0'
+        implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+        implementation "io.rest-assured:spring-mock-mvc:${restAssuredVersion}"
+        implementation "io.rest-assured:json-path:${restAssuredVersion}"
       }
       sources {
 		  java {
@@ -130,6 +165,40 @@ task combineJacocoReports(type: JacocoReport, group: 'verification') {
   }
   
   dependsOn test, integrationTest, testCodeCoverageReport, integrationTestCodeCoverageReport
+}
+
+openApiValidate {
+    inputSpec = "$projectDir/src/main/openapi/bestpractices-rest-api.yaml"
+    recommend = true
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$projectDir/src/main/openapi/bestpractices-rest-api.yaml"
+    outputDir = "$buildDir/generated/openapi"
+    groupId = "$project.group"
+    id = "$project.name-openapi"
+    version = "$project.version"
+    apiPackage = "com.engilyin.bestpractices.rest.openapi.api"
+    invokerPackage = "com.engilyin.bestpractices.rest.openapi.invoker"
+    modelPackage = "com.engilyin.bestpractices.rest.openapi.model"
+    configOptions = [
+        java8                          : "true",
+        dateLibrary                    : "java8",
+        library                        : "spring-boot",
+        openApiNullable                : "true",
+        skipDefaultInterface           : "true",
+        interfaceOnly                  : "true",
+        useBeanValidation              : "true",
+        hideGenerationTimestamp        : "true",
+        useSpringBoot3                 : "true"
+    ]
+}
+
+openApiMeta {
+  generatorName = "OpenApiConfig"
+  packageName = "com.engilyin.bestpractices.rest.openapi.config"
+  outputFolder = "$buildDir/generated/openapi"
 }
 
 
