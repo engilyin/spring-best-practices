@@ -128,7 +128,7 @@ testing {
       }
       sources {
 		  java {
-			srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/src/main/java"]  
+			srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/openapi/src/main/java"]  
 		  }
 		  resources {
 			srcDirs = ['src/integrationTest/resources', 'src/main/resources']
