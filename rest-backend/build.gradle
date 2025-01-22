@@ -193,7 +193,8 @@ openApiGenerate {
         interfaceOnly                  : "true",
         useBeanValidation              : "true",
         hideGenerationTimestamp        : "true",
-        useSpringBoot3                 : "true"
+        useSpringBoot3                 : "true",
+        additionalModelTypeAnnotations : "@lombok.Data;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor;@lombok.Builder;@lombok.extern.jackson.Jacksonized"   
     ]
 }
 
