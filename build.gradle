@@ -35,4 +35,5 @@ allprojects {
 //}
 
 //build.dependsOn installGitHook
+//generateGitProperties.dependsOn installGitHook
 
