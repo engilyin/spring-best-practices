@@ -1,17 +1,17 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version "${springBootVersion}"
-	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
-	id 'project-report'
-	id 'jacoco'
-	id 'jacoco-report-aggregation'
-	id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'project-report'
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
+    id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
 }
 
 repositories {
   mavenCentral()
 }
-  
+
 java {
   toolchain {
     languageVersion = JavaLanguageVersion.of("${targetCompatibility}")
@@ -34,7 +34,7 @@ dependencyManagement {
 
 jar {
   enabled = false
-}	
+}
 
 springBoot {
   mainClass = 'com.engilyin.bestpractices.kafka.KafkaBestPracticesApplication'
@@ -42,66 +42,66 @@ springBoot {
 }
 
 dependencies {
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	implementation 'org.springframework.kafka:spring-kafka'
-	
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	//developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	runtimeOnly 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springframework.kafka:spring-kafka'
 
-	
+
+    //developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'com.h2database:h2'
+
+
 }
 
 testing {
   suites {
-  
+
     test {
-    	useJUnitJupiter()
-    	dependencies {
-			
-		  compileOnly 'org.projectlombok:lombok'
-	      annotationProcessor 'org.projectlombok:lombok'	
-	      
+        useJUnitJupiter()
+        dependencies {
+
+          compileOnly 'org.projectlombok:lombok'
+          annotationProcessor 'org.projectlombok:lombok'
+
           implementation 'org.mockito:mockito-junit-jupiter:5.12.0'
           implementation 'org.assertj:assertj-core:3.24.2'
-    	}
+        }
     }
-    
-    
+
+
     integrationTest(JvmTestSuite) {
-	  
-	  targets {
-		all {
-		  testTask.configure {
-			systemProperty('spring.profiles.active', 'test')
-		  }	
-	    } 
-	  }
-		
+
+      targets {
+        all {
+          testTask.configure {
+            systemProperty('spring.profiles.active', 'test')
+          }
+        }
+      }
+
       dependencies {
         implementation project()
-        
+
         compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'    
-          
+        annotationProcessor 'org.projectlombok:lombok'
+
 
         implementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.kafka:spring-kafka-test'
       }
       sources {
-		  java {
-			srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/src/main/java"]  
-		  }
-		  resources {
-			srcDirs = ['src/integrationTest/resources', 'src/main/resources']
-		  }
-	  }
+          java {
+            srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/src/main/java"]
+          }
+          resources {
+            srcDirs = ['src/integrationTest/resources', 'src/main/resources']
+          }
+      }
     }
   }
 }
@@ -112,7 +112,7 @@ jacocoTestReport {
     xml.required = true
     html.required = true
   }
-  
+
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
       fileTree(dir: it, exclude: [
@@ -131,10 +131,6 @@ task combineJacocoReports(type: JacocoReport, group: 'verification') {
     xml.required = true
     html.required = true
   }
-  
+
   dependsOn test, integrationTest, testCodeCoverageReport, integrationTestCodeCoverageReport
 }
-
-
-
-

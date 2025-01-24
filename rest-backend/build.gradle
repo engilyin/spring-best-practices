@@ -1,19 +1,19 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version "${springBootVersion}"
-	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
-	id 'project-report'
-	id 'jacoco'
-	id 'jacoco-report-aggregation'
-	id 'org.openapi.generator' version '7.9.0'
-	id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
-	id 'com.diffplug.spotless' version "${spotlessVersion}"
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'project-report'
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
+    id 'org.openapi.generator' version '7.9.0'
+    id "com.gorylenko.gradle-git-properties" version "${gorylenkoPluginVersion}"
+    id 'com.diffplug.spotless' version "${spotlessVersion}"
 }
 
 repositories {
   mavenCentral()
 }
-  
+
 java {
   toolchain {
     languageVersion = JavaLanguageVersion.of("${targetCompatibility}")
@@ -52,7 +52,7 @@ sourceSets {
     }
   }
   test {
-    java {  
+    java {
       srcDir "$buildDir/generated/openapi/src/main/java"
     }
   }
@@ -63,59 +63,59 @@ compileJava {
 }
 
 dependencies {
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	
-	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
-	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-	annotationProcessor 'io.swagger.core.v3:swagger-annotations:2.2.23'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor 'io.swagger.core.v3:swagger-annotations:2.2.23'
 
-	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
     //For OpenAPI
-	implementation "org.openapitools:jackson-databind-nullable:0.2.6"
-	
-	
-	//developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	runtimeOnly 'com.h2database:h2'
-	
-	
+    implementation "org.openapitools:jackson-databind-nullable:0.2.6"
+
+
+    //developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'com.h2database:h2'
+
+
 }
 
 testing {
   suites {
-  
+
     test {
-    	useJUnitJupiter()
-    	dependencies {
-		  compileOnly 'org.projectlombok:lombok'
-	      annotationProcessor 'org.projectlombok:lombok'
-	      
+        useJUnitJupiter()
+        dependencies {
+          compileOnly 'org.projectlombok:lombok'
+          annotationProcessor 'org.projectlombok:lombok'
+
           implementation 'org.mockito:mockito-junit-jupiter:5.12.0'
           implementation 'org.assertj:assertj-core:3.24.2'
-    	}
+        }
     }
-    
-    
+
+
     integrationTest(JvmTestSuite) {
-	  
-	  targets {
-		all {
-		  testTask.configure {
-			systemProperty('spring.profiles.active', 'test')
-		  }	
-	    } 
-	  }
-		
+
+      targets {
+        all {
+          testTask.configure {
+            systemProperty('spring.profiles.active', 'test')
+          }
+        }
+      }
+
       dependencies {
         implementation project()
 
@@ -127,13 +127,13 @@ testing {
         implementation "io.rest-assured:json-path:${restAssuredVersion}"
       }
       sources {
-		  java {
-			srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/openapi/src/main/java"]  
-		  }
-		  resources {
-			srcDirs = ['src/integrationTest/resources', 'src/main/resources']
-		  }
-	  }
+          java {
+            srcDirs = ['src/integrationTest/java', 'src/main/java', "$buildDir/generated/openapi/src/main/java"]
+          }
+          resources {
+            srcDirs = ['src/integrationTest/resources', 'src/main/resources']
+          }
+      }
     }
   }
 }
@@ -144,7 +144,7 @@ jacocoTestReport {
     xml.required = true
     html.required = true
   }
-  
+
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
       fileTree(dir: it, exclude: [
@@ -163,7 +163,7 @@ task combineJacocoReports(type: JacocoReport, group: 'verification') {
     xml.required = true
     html.required = true
   }
-  
+
   dependsOn test, integrationTest, testCodeCoverageReport, integrationTestCodeCoverageReport
 }
 
@@ -194,7 +194,7 @@ openApiGenerate {
         useBeanValidation              : "true",
         hideGenerationTimestamp        : "true",
         useSpringBoot3                 : "true",
-        additionalModelTypeAnnotations : "@lombok.Data;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor;@lombok.Builder;@lombok.extern.jackson.Jacksonized"   
+        additionalModelTypeAnnotations : "@lombok.Data;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor;@lombok.Builder;@lombok.extern.jackson.Jacksonized"
     ]
 }
 
@@ -203,5 +203,3 @@ openApiMeta {
   packageName = "com.engilyin.bestpractices.rest.openapi.config"
   outputFolder = "$buildDir/generated/openapi"
 }
-
-
