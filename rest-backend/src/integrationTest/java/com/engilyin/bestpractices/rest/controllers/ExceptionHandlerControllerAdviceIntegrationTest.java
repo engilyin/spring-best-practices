@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.engilyin.bestpractices.rest.config.ArticleRequestTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +22,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.engilyin.bestpractices.rest.config.ArticleRequestTestConfig;
-
-@ExtendWith({ SpringExtension.class, MockitoExtension.class })
-@WebMvcTest(controllers = { ArticleController.class,
-	ExceptionHandlerControllerAdvice.class }, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
-@ContextConfiguration(classes = { ArticleController.class, ExceptionHandlerControllerAdvice.class,
-	ArticleRequestTestConfig.class })
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@WebMvcTest(
+        controllers = {ArticleController.class, ExceptionHandlerControllerAdvice.class},
+        excludeAutoConfiguration = {SecurityAutoConfiguration.class})
+@ContextConfiguration(
+        classes = {ArticleController.class, ExceptionHandlerControllerAdvice.class, ArticleRequestTestConfig.class})
 @AutoConfigureMockMvc
 public class ExceptionHandlerControllerAdviceIntegrationTest {
 
@@ -42,18 +42,16 @@ public class ExceptionHandlerControllerAdviceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-	this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test
     void headerMissed_error400() throws Exception {
 
-	mockMvc.perform(post("/api/exception-handler/header-missed"))
-		.andDo(MockMvcResultHandlers.print())
-		.andExpect(status().isBadRequest())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-		.andExpect(jsonPath("$.description").isNotEmpty());
-
+        mockMvc.perform(post("/api/exception-handler/header-missed"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.description").isNotEmpty());
     }
-
 }
