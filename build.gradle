@@ -13,7 +13,7 @@ subprojects {
     
     if(!System.getenv("CICD")) {
         spotless {
-          //ratchetFrom 'origin/main'
+          ratchetFrom 'origin/main'
           format 'misc', {
             target '*.gradle', '*.md'
             trimTrailingWhitespace()
