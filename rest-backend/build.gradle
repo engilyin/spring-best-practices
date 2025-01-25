@@ -79,11 +79,17 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
+
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
     //For OpenAPI
     implementation "org.openapitools:jackson-databind-nullable:0.2.6"
 
+    implementation 'org.mindrot:jbcrypt:0.4'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 
     //developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     runtimeOnly 'com.h2database:h2'
@@ -168,7 +174,7 @@ task combineJacocoReports(type: JacocoReport, group: 'verification') {
 }
 
 openApiValidate {
-    inputSpec = "$projectDir/src/main/openapi/bestpractices-rest-api.yaml".replace("\\","/")
+    inputSpec = "$projectDir/src/main/openapi/static/bestpractices-rest-api.yaml".replace("\\","/")
     recommend = true
 }
 
@@ -176,7 +182,7 @@ openApiGenerate {
     generatorName = "spring"
     //WORKAROUND for bug of OpenAPI 3.1.0 for Windows https://github.com/OpenAPITools/openapi-generator/issues/15202
     //Also you can fall back to 3.0.1
-    inputSpec = "$projectDir/src/main/openapi/bestpractices-rest-api.yaml".replace("\\","/")
+    inputSpec = "$projectDir/src/main/openapi/static/bestpractices-rest-api.yaml".replace("\\","/")
     outputDir = "$buildDir/generated/openapi"
     groupId = "$project.group"
     id = "$project.name-openapi"

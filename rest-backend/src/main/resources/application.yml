@@ -1,1 +1,8 @@
-spring.application.name=bestpractices
+spring:
+  application:
+    name: bestpractices
+ 
+springdoc:
+  swagger-ui:
+    enabled: true
+    url: /bestpractices-rest-api.yaml  
