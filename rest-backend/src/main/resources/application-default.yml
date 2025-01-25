@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none  # Using schema.sql for structure
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true  # Show SQL queries in logs
+  h2:
+    console:
+      enabled: true
+      path: /h2-console  # Access via http://localhost:8080/h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+
+      
+jwt:
+  secret: gxxXCtawq/RQ6gKGBAhwz5bCElXUBFnnO7949J1xaJ32yAeMqS6uyR9nlC7qswl0xRfzTKAHqv0vpm+yWg+cVg==
+  session-time: 86400      
+  
+debug:
+   logging.http-requests: true
+   
+logging:
+  level:
+    ROOT: ERROR
+    com:
+      engilyin: DEBUG
+    io:
+      ROOT: INFO
+      spring: DEBUG
+    org:
+      apache: INFO
+      springframework:
+        web: 
+          ROOT: DEBUG
+          server:
+            adapter:
+              HttpWebHandlerAdapter: TRACE
+#          filter:
+#            CommonsRequestLoggingFilter: TRACE 
+#        http:
+#          converter: DEBUG
+#    com:
+#      fasterxml:
+#        jackson: DEBUG
+        
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: FULL
